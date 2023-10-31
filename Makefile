@@ -19,7 +19,7 @@ LDFLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl
 # SHARED OBJECTS AND TARGETS  (Targets are executables)
 
 # Shared objects by multiple executables
-CPP_FILES :=
+CPP_FILES := Shader.cpp
 OBJECTS := $(CPP_FILES:.cpp=.o) glad.o
 OBJECTS := $(addprefix $(BUILD)/, $(OBJECTS))
 
