@@ -108,7 +108,7 @@ int main() {
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
+    // glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -274,6 +274,20 @@ void processInput(GLFWwindow* window) {
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        camera.ProcessKeyboard(UP, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        camera.ProcessKeyboard(DOWN, deltaTime);
+
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+        camera.ProcessKeyboard(LOOKUP, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+        camera.ProcessKeyboard(LOOKDOWN, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+        camera.ProcessKeyboard(LOOKLEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+        camera.ProcessKeyboard(LOOKRIGHT, deltaTime);
 }
 // glfw: window resize callback
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {

@@ -21,6 +21,8 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 }
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
     float velocity = MovementSpeed * deltaTime;
+    float xoffset = 0.0f;
+    float yoffset = 0.0f;
     if (direction == FORWARD)        
         Position += Front * velocity;
     if (direction == BACKWARD)
@@ -29,6 +31,34 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
         Position -= Right * velocity;
     if (direction == RIGHT)
         Position += Right * velocity;
+
+    if (direction == UP)
+        Position += Up * velocity;
+    if (direction == DOWN)
+        Position -= Up * velocity;
+        
+    if (direction == LOOKUP)        
+        yoffset += 1.0f * deltaTime;
+    if (direction == LOOKDOWN)
+        yoffset -= 1.0f * deltaTime;
+    if (direction == LOOKLEFT)
+        xoffset -= 1.0f * deltaTime;
+    if (direction == LOOKRIGHT)
+        xoffset += 1.0f * deltaTime;
+    
+    xoffset *= MouseSensitivity;
+    yoffset *= MouseSensitivity;
+
+    Yaw    = glm::mod(Yaw + xoffset, 360.0f);
+    Pitch += yoffset;
+
+    if (true) {
+        if (Pitch > 89.0f)
+            Pitch = 89.0f;
+        if (Pitch < -89.0f)
+            Pitch = -89.0f;
+    }
+    updateCameraVectors();
 }
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch) {
     xoffset *= MouseSensitivity;
