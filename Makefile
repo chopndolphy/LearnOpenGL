@@ -14,12 +14,12 @@ CFLAGS = -Wall -O2 $(ALL_INCLUDES)
 # CFLAGS = -Wall -ggdb -O3 $(INCLUDES)
 CXXFLAGS = -std=c++17 -O2 -Wall -Wextra -pedantic $(ALL_INCLUDES)
 # CXXFLAGS = -Wall -ggdb -O3 $(INCLUDES)
-LDFLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl
+LDFLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lassimp
 
 # SHARED OBJECTS AND TARGETS  (Targets are executables)
 
 # Shared objects by multiple executables
-CPP_FILES := Shader.cpp Camera.cpp stb_image.cpp
+CPP_FILES := Shader.cpp Camera.cpp stb_image.cpp Mesh.cpp Model.cpp
 OBJECTS := $(CPP_FILES:.cpp=.o) glad.o
 OBJECTS := $(addprefix $(BUILD)/, $(OBJECTS))
 
