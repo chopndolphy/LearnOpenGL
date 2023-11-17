@@ -95,12 +95,12 @@ int main() {
         lightingShader.activate_shader();
 
         lightingShader.setVec3("viewPos", camera.Position);
-        lightingShader.setFloat("shininess", 16.0f);
+        lightingShader.setFloat("shininess", 10.0f);
 
         lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
 
-        lightingShader.setVec3("pointLight.position", glm::vec3(0.7f, 0.2f, 2.0f));
+        lightingShader.setVec3("pointLight.position", glm::vec3(0.7f, 0.2f, 3.0f));
         lightingShader.setVec3("pointLight.ambient", 0.05f, 0.05f, 0.05f);
         lightingShader.setVec3("pointLight.diffuse", 0.8f, 0.5f, 0.0f);
         lightingShader.setVec3("pointLight.specular", 1.0f, 1.0f, 1.0f);
@@ -109,14 +109,17 @@ int main() {
         lightingShader.setFloat("pointLight.quadratic", 0.032f);
 
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
         lightingShader.setMat4("model", model);
         ourModel.Draw(lightingShader);
 
         lightCubeShader.activate_shader();
         lightCubeShader.setMat4("projection", projection);
         lightCubeShader.setMat4("view", view);
-        model = glm::translate(model, glm::vec3(0.7f, 0.2f, 2.0f));
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.7f, 0.2f, 3.0f));
         model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
         lightCubeShader.setMat4("model", model);
         cubeModel.Draw(lightCubeShader);
