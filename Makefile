@@ -3,9 +3,11 @@ SRC = src
 BUILD = build
 INCLUDE = include
 
-ALL_INCLUDES = -I$(GLAD_INC) -I./$(INCLUDE)
+ALL_INCLUDES = -I$(GLAD_INC) -I./$(INCLUDE) -I./$(IMGUI_DIR) -I./$(IMGUI_DIR)/backends
 GLAD = ./glad
 GLAD_INC = $(GLAD)/include
+IMGUI_DIR = imgui
+IMGUI_SOURCES := $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp $(IMGUI_DIR)/imgui_stdlib.cpp $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 
 # Compiler and flags
 CC = gcc
@@ -19,8 +21,8 @@ LDFLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lassimp
 # SHARED OBJECTS AND TARGETS  (Targets are executables)
 
 # Shared objects by multiple executables
-CPP_FILES := Shader.cpp Camera.cpp stb_image.cpp Mesh.cpp Model.cpp
-OBJECTS := $(CPP_FILES:.cpp=.o) glad.o
+CPP_FILES := Shader.cpp Camera.cpp stb_image.cpp Mesh.cpp Model.cpp SimpleGui.cpp
+OBJECTS := $(CPP_FILES:.cpp=.o) glad.o imgui_impl_glfw.o imgui_impl_opengl3.o imgui_demo.o imgui_draw.o imgui_tables.o imgui_widgets.o imgui_stdlib.o imgui.o
 OBJECTS := $(addprefix $(BUILD)/, $(OBJECTS))
 
 # Targets
@@ -48,6 +50,13 @@ $(TARGETS): $(OBJECTS) $$@.o
 $(BUILD)/glad.o: $(GLAD)/src/glad.c $(GLAD)/include/glad/glad.h | $(BUILD)
 	$(CC) -c $(CFLAGS) -o $@ $< 
 
+# imgui:
+$(BUILD)/%.o:$(IMGUI_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(BUILD)/%.o:$(IMGUI_DIR)/backends/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
 # recipe 2: compile objects - cpp files with header files
 $(BUILD)/%.o: $(SRC)/%.cpp $(INCLUDE)/%.h | $(BUILD)
 	$(CXX) $(CXXFLAGS) -c $< -o $@ 
@@ -55,7 +64,7 @@ $(BUILD)/%.o: $(SRC)/%.cpp $(INCLUDE)/%.h | $(BUILD)
 # recipe 3: compile executables - cpp files without header files
 $(BUILD)/%.o: $(SRC)/%.cpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) -c $< -o $@    
-   
+
 # PHONY
 .PHONY : all clean run-test
 
