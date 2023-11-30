@@ -92,67 +92,68 @@ int main() {
     Model cubeModel((cubeAbsPath / "cube.obj").string().c_str());
 
     float lightColor[4] = {0.8f, 0.5f, 0.0f, 1.0f};
+    float skyColor[4] = {0.1f, 0.1f, 0.1f, 1.0f};
 
-    // float planeX = 20.0f;
-    // float planeZ = 20.0f;
-    // float planeVertices[] = {
-    //     -(planeX / 2.0f), 0.0f, -(planeZ / 2.0f),   0.0f, 0.0f, 
-    //      (planeX / 2.0f), 0.0f, -(planeZ / 2.0f),   1.0f, 0.0f,
-    //     -(planeX / 2.0f), 0.0f,  (planeZ / 2.0f),   0.0f, 1.0f,
-    //      (planeX / 2.0f), 0.0f,  (planeZ / 2.0f),   1.0f, 1.0f
-    // };
-    // unsigned int planeIndices[] = {
-    //     0, 1, 2,
-    //     1, 2, 3
-    // };
-    // unsigned int planeVBO, planeVAO, planeEBO;
-    // glGenVertexArrays(1, &planeVAO);
-    // glGenBuffers(1, &planeVBO);
-    // glGenBuffers(1, &planeEBO);
+    float planeX = 20.0f;
+    float planeZ = 20.0f;
+    float planeVertices[] = {
+        -(planeX / 2.0f), 0.0f, -(planeZ / 2.0f),   0.0f, 0.0f, 
+         (planeX / 2.0f), 0.0f, -(planeZ / 2.0f),   1.0f, 0.0f,
+        -(planeX / 2.0f), 0.0f,  (planeZ / 2.0f),   0.0f, 1.0f,
+         (planeX / 2.0f), 0.0f,  (planeZ / 2.0f),   1.0f, 1.0f
+    };
+    unsigned int planeIndices[] = {
+        0, 1, 2,
+        1, 2, 3
+    };
+    unsigned int planeVBO, planeVAO, planeEBO;
+    glGenVertexArrays(1, &planeVAO);
+    glGenBuffers(1, &planeVBO);
+    glGenBuffers(1, &planeEBO);
 
-    // glBindVertexArray(planeVAO);
+    glBindVertexArray(planeVAO);
 
-    // glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
 
-    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, planeEBO);
-    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(planeIndices), planeIndices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, planeEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(planeIndices), planeIndices, GL_STATIC_DRAW);
 
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    // glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
-    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
-    // glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
-    // unsigned int planeTexture;
-    // // texture 1
-    // // ---------
-    // glGenTextures(1, &planeTexture);
-    // glBindTexture(GL_TEXTURE_2D, planeTexture); 
-    //  // set the texture wrapping parameters
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // // set texture filtering parameters
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // // load image, create texture and generate mipmaps
-    // int width, height, nrChannels;
-    // stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-    // // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    // unsigned char *data = stbi_load(std::filesystem::absolute("./textures/grass.jpg").c_str(), &width, &height, &nrChannels, 0);
-    // if (data)
-    // {
-    //     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    //     glGenerateMipmap(GL_TEXTURE_2D);
-    // }
-    // else
-    // {
-    //     std::cout << "Failed to load texture" << std::endl;
-    // }
-    // stbi_image_free(data);
+    unsigned int planeTexture;
+    // texture 1
+    // ---------
+    glGenTextures(1, &planeTexture);
+    glBindTexture(GL_TEXTURE_2D, planeTexture); 
+     // set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image, create texture and generate mipmaps
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+    unsigned char *data = stbi_load(std::filesystem::absolute("./textures/grass.jpg").c_str(), &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
     // render loop
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -162,29 +163,43 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        SimpleGui::renderWindow(lightColor);
+        SimpleGui::renderWindow(lightColor, skyColor);
 
         // input
         processInput(window);
 
         // render
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClearColor(skyColor[0], skyColor[1], skyColor[2], skyColor[3]);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // glActiveTexture(GL_TEXTURE0); 
-        // glBindTexture(GL_TEXTURE_2D, planeTexture);
+        glActiveTexture(GL_TEXTURE0); 
+        glBindTexture(GL_TEXTURE_2D, planeTexture);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 model = glm::mat4(1.0f);
 
-        // planeShader.activate_shader();
-        // planeShader.setMat4("projection", projection);
-        // planeShader.setMat4("view", view);
-        // planeShader.setMat4("model", model);
-        // planeShader.setInt("planeTexture", 0);
-        // glBindVertexArray(planeVAO);
-        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        planeShader.activate_shader();
+        planeShader.setMat4("projection", projection);
+        planeShader.setMat4("view", view);
+        model = glm::translate(model, glm::vec3(0.0f, -5.0f, 0.0f));
+        planeShader.setMat4("model", model);
+        planeShader.setInt("planeTexture", 0);
+        planeShader.setVec3("viewPos", camera.Position);
+        planeShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        planeShader.setVec3("dirLight.ambient", 0.2f, 0.2f, 0.2f);
+        planeShader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
+
+        planeShader.setVec3("pointLight.position", glm::vec3(0.7f, 0.2f, 3.0f));
+        planeShader.setVec3("pointLight.ambient", 0.05f, 0.05f, 0.05f);
+        planeShader.setVec3("pointLight.diffuse", lightColor[0], lightColor[1], lightColor[2]);
+        planeShader.setFloat("pointLight.constant", 1.0f);
+        planeShader.setFloat("pointLight.linear", 0.09f);
+        planeShader.setFloat("pointLight.quadratic", 0.032f);
+        glBindVertexArray(planeVAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        model = glm::mat4(1.0f);
 
         lightingShader.activate_shader();
 
@@ -193,6 +208,11 @@ int main() {
 
         lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
+
+        lightingShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        lightingShader.setVec3("dirLight.ambient", 0.2f, 0.2f, 0.2f);
+        lightingShader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
+        lightingShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
 
         lightingShader.setVec3("pointLight.position", glm::vec3(0.7f, 0.2f, 3.0f));
         lightingShader.setVec3("pointLight.ambient", 0.05f, 0.05f, 0.05f);
@@ -210,6 +230,7 @@ int main() {
         ourModel.Draw(lightingShader);
 
         lightCubeShader.activate_shader();
+        lightCubeShader.setVec3("lightColor", lightColor[0], lightColor[1], lightColor[2]);
         lightCubeShader.setMat4("projection", projection);
         lightCubeShader.setMat4("view", view);
         model = glm::mat4(1.0f);

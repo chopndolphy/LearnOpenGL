@@ -4,6 +4,6 @@
 
 class SimpleGui {
 public:
-    static void renderWindow(float color[]);
+    static void renderWindow(float lightColor[], float skyColor[]);
 private:
 };
