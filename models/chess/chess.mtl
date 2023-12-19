@@ -1,0 +1,14 @@
+# Blender 4.0.2 MTL File: 'None'
+# www.blender.org
+
+newmtl DefaultMaterial
+Ns 0.010000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd DefaultMaterial_albedo.jpeg
+map_Ks DefaultMaterial_metallic.jpeg
+map_Bump -bm 1.000000 DefaultMaterial_normal.png

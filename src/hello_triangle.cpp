@@ -87,9 +87,11 @@ int main() {
     // load models
     std::filesystem::path backpackAbsPath = std::filesystem::absolute("./models/backpack/");
     std::filesystem::path cubeAbsPath = std::filesystem::absolute("./models/cube/");
+    std::filesystem::path chessboardAbsPath = std::filesystem::absolute("./models/chess/");
 
     Model ourModel((backpackAbsPath / "backpack.obj").string().c_str());
     Model cubeModel((cubeAbsPath / "cube.obj").string().c_str());
+    Model chessboardModel((chessboardAbsPath / "chess.obj").string().c_str());
 
     float lightColor[4] = {0.8f, 0.5f, 0.0f, 1.0f};
     float skyColor[4] = {0.1f, 0.1f, 0.1f, 1.0f};
@@ -222,12 +224,17 @@ int main() {
         lightingShader.setFloat("pointLight.linear", 0.09f);
         lightingShader.setFloat("pointLight.quadratic", 0.032f);
 
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         lightingShader.setMat4("model", model);
         ourModel.Draw(lightingShader);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+        lightingShader.setMat4("model", model);
+        chessboardModel.Draw(lightingShader);
 
         lightCubeShader.activate_shader();
         lightCubeShader.setVec3("lightColor", lightColor[0], lightColor[1], lightColor[2]);
