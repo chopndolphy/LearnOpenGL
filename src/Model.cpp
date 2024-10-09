@@ -21,7 +21,9 @@
 
 void Model::loadModel(std::string const &path) {
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    const aiScene *scene = importer.ReadFile(
+            path, 
+            aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
@@ -112,6 +114,13 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
+    glCreateBuffers(1, &textureBuffer);
+    glNamedBufferStorage(
+            textureBuffer,
+            sizeof(GLuint64) * texture_handles.size(),
+            (const void*)texture_handles.data(),
+            GL_DYNAMIC_STORAGE_BIT);
+
     return Mesh(vertices, indices, textures);
 }
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName) {
@@ -131,10 +140,16 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         if (!skip) {
             Texture texture;
             texture.id = Model::TextureFromFile(str.C_Str(), this->directory);
+            texture.handle = glGetTextureHandleARB(texture.id);
+            if (texture.handle == 0) {
+                std::cout << "Error! Handle returned null" << std::endl;
+                exit(-1);
+            }
             texture.type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);
             textures_loaded.push_back(texture);
+            texture_handles.push_back(texture.handle);
         }
     }
     return textures;
@@ -143,8 +158,11 @@ unsigned int Model::TextureFromFile(const char *path, const std::string &directo
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
 
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
+    //unsigned int textureID;
+    //glGenTextures(1, &textureID);
+    GLuint texture;
+    glCreateTextures(GL_TEXTURE_2D, 1, &texture);
+
 
     int width;
     int height;
@@ -153,25 +171,36 @@ unsigned int Model::TextureFromFile(const char *path, const std::string &directo
     if (data) {
         GLenum format;
         if (nrComponents == 1) {
-            format = GL_RED;
+            format = GL_R8;
         } else if (nrComponents == 3) {
-            format = GL_RGB;
+            format = GL_RGB8;
         } else if (nrComponents == 4) {
-            format = GL_RGBA;
+            format = GL_RGBA8;
+        } else {
+            std::cout << "Unsupported texture format" << std::endl;
+            exit(-1);
         }
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        //glBindTexture(GL_TEXTURE_2D, textureID);
+        //glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        //glGenerateMipmap(GL_TEXTURE_2D);
+        glTextureStorage2D(texture, 1, format, width, height);
+        glTextureSubImage2D(texture, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, (const void*)&data[0]);
+        glGenerateTextureMipmap(texture);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         stbi_image_free(data);
     } else {
         std::cout << "Texture failed to load at path: " << path << std::endl;
         stbi_image_free(data);
     }
-    return textureID;
+    //return textureID;
+    return texture;
 }

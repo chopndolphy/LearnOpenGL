@@ -22,6 +22,8 @@
 class Model {
 public:
     std::vector<Texture> textures_loaded;
+    std::vector<GLuint64> texture_handles;
+    GLuint textureBuffer;
     std::vector<Mesh> meshes;
     std::string directory;
     bool gammaCorrection;
@@ -30,6 +32,10 @@ public:
         loadModel(path);
     }
     void Draw(Shader &shader) {
+        for (GLuint64 handle : texture_handles) {
+            glMakeTextureHandleResidentARB(handle);
+        }
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, textureBuffer);
         for (unsigned int i = 0; i < meshes.size(); i++) {
             meshes[i].Draw(shader);
         }
